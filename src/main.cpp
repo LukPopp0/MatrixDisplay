@@ -1,9 +1,12 @@
 #include <Arduino.h>
+#include "network/CaptivePortal.h"
+
+
 
 void setup() {
-  // put your setup code here, to run once:
+  CaptivePortal::setup();
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  CaptivePortal::loop();
 }
