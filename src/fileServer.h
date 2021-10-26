@@ -3,6 +3,8 @@
 #include <Arduino.h>
 #include "LittleFS.h"
 
+#include "SerialWrapper.h"
+
 namespace FileServer {
 bool setup();
 const String getContentType(String filename);
@@ -39,8 +41,8 @@ const File getFile(String path) {
     String pathWithGz = path + ".gz";
     if (LittleFS.exists(pathWithGz))
         path += ".gz";
-    Serial.print("Getting file from path: ");
-    Serial.println(path);
+    print(F("Getting file from path: "));
+    printlnRaw(path);
     return LittleFS.open(path, "r");
 }
 

@@ -44,13 +44,13 @@ uint8_t i_listeners = 0;
 // notify everyone interested that a new configuration is available
 void callListeners() {
     for (uint8_t i = 0; i < i_listeners; i++) {
-        Serial.println("Calling listener " + String(i));
+        printlnRaw("Calling listener " + String(i));
 
         fListener listener = listeners[i];
 
         // check for value
         if (listener == NULL) {
-            Serial.println("Listener not initialised");
+            println(F("Listener not initialised"));
         }
         // unpack function pointer from list and call
         (*listener)();
@@ -63,7 +63,7 @@ void callListeners() {
 const Configuration get() {
     // singleton-like
     if (!initialized) {
-        Serial.println("Loading initial config from EEPROM");
+        println(F("Loading initial config from EEPROM"));
         configuration = PersistenceStore::loadSettings();
         initialized = true;
         callListeners();
@@ -75,7 +75,7 @@ const Configuration get() {
 // write Configuration to EEPROM, lazy save after a small timeout to reduce EEPROM wear
 void set(Configuration newConfig) {
     if (configuration == newConfig) {
-        Serial.println("config identical, skipping save");
+        println(F("config identical, skipping save"));
         return;
     }
 
@@ -97,16 +97,16 @@ void trySave() {
         PersistenceStore::saveSettings(configuration);
         tNextSavepoint = 0;
 
-        Serial.println("Saving to EEPROM");
+        println(F("Saving to EEPROM"));
     }
 }
 
 // Calls listeners automatically while loading a initial config
 void registerListener(fListener listener) {
-    Serial.println("Adding listener");
+    println(F("Adding listener"));
 
     if (i_listeners >= N_MAX_LISTENERS) {
-        Serial.println("List is full, unable to add listener");
+        println(F("List is full, unable to add listener"));
     }
 
     listeners[i_listeners++] = listener;

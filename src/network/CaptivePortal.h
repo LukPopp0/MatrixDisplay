@@ -3,6 +3,8 @@
 #include <ESP8266WiFi.h>
 #include <DNSServer.h>
 #include <ESP8266WebServer.h>
+
+#include "SerialWrapper.h"
 #include "fileServer.h"
 
 namespace CaptivePortal {
@@ -37,8 +39,7 @@ void setup() {
   // replay to all requests with same HTML
   webServer.onNotFound([]() {
     File f = FileServer::getFile("/index.html");
-    Serial.println(f.readString());
-    webServer.send(200, "text/html", f.readString());
+    printlnRaw(f.readString());
   });
   webServer.begin();
 }
