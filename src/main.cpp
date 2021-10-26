@@ -1,10 +1,12 @@
 #include <Arduino.h>
+
+#define DEBUG
+
 #include "network/CaptivePortal.h"
 #include "persistence/persistenceManager.h"
 #include "SerialWrapper.h"
 #include "fileServer.h"
 
-#define DEBUG
 
 void setup() {
   setupSerial(115200);
@@ -19,4 +21,5 @@ void setup() {
 
 void loop() {
   CaptivePortal::loop();
+  heartbeatSerial();
 }

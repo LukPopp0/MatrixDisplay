@@ -28,6 +28,26 @@ void setupSerial(int baud) {
     Serial.println(); // init monitor
 }
 
+void heartbeatSerial() {
+    if (!USE_SERIAL)
+        return;
+
+    static uint32_t lastCycle = millis();
+    static uint32_t lastMsg = millis();
+    const uint16_t timeInterval = 10 * 1000;
+
+    uint32_t time = millis();
+
+    if (time - lastMsg > timeInterval) {
+        Serial.print(F("cycle time: ["));
+        Serial.print(time - lastCycle);
+        Serial.println(F("]"));
+        lastMsg = time;
+    }
+
+    lastCycle = millis();
+}
+
 // protected method to enforce "F" and ensure flag usage
 void println(const __FlashStringHelper* string) {
     if (!USE_SERIAL)
