@@ -3,8 +3,11 @@
 #include <ESP8266WiFi.h>
 #include <DNSServer.h>
 #include <ESP8266WebServer.h>
+#include "fileServer.h"
 
 namespace CaptivePortal {
+
+void handleConfigPortal();
 
 namespace {
   const byte DNS_PORT = 53;
@@ -29,9 +32,13 @@ void setup() {
   // provided IP to all DNS request
   dnsServer.start(DNS_PORT, "*", apIP);
 
+  webServer.on(("/config"), handleConfigPortal);
+
   // replay to all requests with same HTML
   webServer.onNotFound([]() {
-    webServer.send(200, "text/html", responseHTML);
+    File f = FileServer::getFile("/index.html");
+    Serial.println(f.readString());
+    webServer.send(200, "text/html", f.readString());
   });
   webServer.begin();
 }
@@ -39,6 +46,10 @@ void setup() {
 void loop() {
   dnsServer.processNextRequest();
   webServer.handleClient();
+}
+
+void handleConfigPortal() {
+  webServer.send(200, "text/html", responseHTML);
 }
 
 } // namespace CaptivePortal
