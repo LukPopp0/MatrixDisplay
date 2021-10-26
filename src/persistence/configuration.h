@@ -13,17 +13,19 @@ const uint8_t VERSION = 1;
 struct Configuration {
     uint8_t selectedImage;
     uint8_t fps;
+    uint8_t brightness;
 
     const bool operator==(const Configuration& other) {
         return (
             this->selectedImage == other.selectedImage &&
-            this->fps == other.fps
+            this->fps == other.fps &&
+            this->brightness == other.brightness
         );
     }
 };
 
 Configuration defaultConfiguration = {
-    1, 4
+    1, 4, 127
 };
 
 } // namespace Configuration

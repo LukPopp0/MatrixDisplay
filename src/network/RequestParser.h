@@ -38,7 +38,7 @@ void splitCSVToArray(const char* input, uint8_t* output, const char* token = ","
  * */
 const String generateConfigJson() {
     const Config::Configuration config = PersistenceManager::get();
-    const int NUM_JSON_ELEMENTS = 2;
+    const int NUM_JSON_ELEMENTS = 3;
 
     // actual number of objects, in this case number of lines
     const uint16_t capacity = JSON_OBJECT_SIZE(NUM_JSON_ELEMENTS);
@@ -47,6 +47,7 @@ const String generateConfigJson() {
     // add element for every config parameter
     doc["selectedImage"] = config.selectedImage;
     doc["fps"] = config.fps;
+    doc["brightness"] = config.brightness;
 
     // add new fields here and increase JSON size
 
@@ -72,6 +73,11 @@ const Config::Configuration argsToConfiguration(ESP8266WebServer& server) {
 
     if (server.argName(1) == "fps")
         newValues.fps = server.arg(1) == "true" ? true : false;
+    else
+        logError(F("Value 1 not found"));
+
+    if (server.argName(1) == "brightness")
+        newValues.brightness = server.arg(1) == "true" ? true : false;
     else
         logError(F("Value 1 not found"));
 

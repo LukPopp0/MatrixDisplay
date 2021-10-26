@@ -60,7 +60,7 @@ void handleNotFound() {
   // look for a html file within the path of the server
   String path = webServer.uri();
 
-  // check if it's the standard captive portal request
+  // check if it's the standard captive portal request (probe request)
   if (path.endsWith("/generate_204") || path.endsWith("/gen_204")) {
     handleFile("/index.html");
   } else {
