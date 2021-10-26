@@ -36,10 +36,11 @@ void setup() {
 
   webServer.on(("/config"), handleConfigPortal);
 
-  // replay to all requests with same HTML
+  // stream initial html page for basic requests
   webServer.onNotFound([]() {
     File f = FileServer::getFile("/index.html");
-    printlnRaw(f.readString());
+    String contentType = FileServer::getContentType("/index.html");
+    webServer.streamFile(f, contentType);
   });
   webServer.begin();
 }
@@ -50,7 +51,7 @@ void loop() {
 }
 
 void handleConfigPortal() {
-  webServer.send(200, "text/html", responseHTML);
+  webServer.send(200, "text/html", responseHTML + "\nThis is the config");
 }
 
 } // namespace CaptivePortal
