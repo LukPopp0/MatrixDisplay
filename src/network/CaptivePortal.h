@@ -1,8 +1,9 @@
 #pragma once
 
-#include <ESP8266WiFi.h>
 #include <DNSServer.h>
 #include <ESP8266WebServer.h>
+#include <ESP8266WiFi.h>
+
 
 #include "SerialWrapper.h"
 #include "fileServer.h"
@@ -16,18 +17,18 @@ void handleConfigRequest();
 void handleConfigUpdate();
 
 namespace {
-  const byte DNS_PORT = 53;
-  IPAddress apIP(172, 217, 28, 1);
-  DNSServer dnsServer;
-  ESP8266WebServer webServer(80);
-  const char *captivePortalName = "My LED Matrix";
-  String responseHTML = ""
-                        "<!DOCTYPE html><html lang='en'><head>"
-                        "<meta name='viewport' content='width=device-width'>"
-                        "<title>CaptivePortal</title></head><body>"
-                        "<h1>Hello World!</h1><p>This is a captive portal example."
-                        " All requests will be redirected here.</p></body></html>";
-}
+const byte DNS_PORT = 53;
+IPAddress apIP(172, 217, 28, 1);
+DNSServer dnsServer;
+ESP8266WebServer webServer(80);
+const char* captivePortalName = "My LED Matrix";
+String responseHTML = ""
+                      "<!DOCTYPE html><html lang='en'><head>"
+                      "<meta name='viewport' content='width=device-width'>"
+                      "<title>CaptivePortal</title></head><body>"
+                      "<h1>Hello World!</h1><p>This is a captive portal example."
+                      " All requests will be redirected here.</p></body></html>";
+} // namespace
 
 void setup() {
   WiFi.mode(WIFI_AP);
@@ -40,7 +41,6 @@ void setup() {
 
   webServer.on(("/config"), handleConfigRequest);
   webServer.on(("/update"), handleConfigUpdate);
-
 
   // stream initial html page for basic requests
   webServer.onNotFound(handleNotFound);
@@ -64,9 +64,9 @@ void handleNotFound() {
   if (path.endsWith("/generate_204") || path.endsWith("/gen_204")) {
     handleFile("/index.html");
   } else {
-  // else handle all other files
+    // else handle all other files
     if (path.endsWith("/"))
-        path += "index.html";
+      path += "index.html";
     handleFile(path);
   }
 }
@@ -89,17 +89,18 @@ void handleFile(String path) {
 
 void handleConfigRequest() {
   println(F("Received config request"));
-  String json = RequestParser::generateConfigJson();;
+  String json = RequestParser::generateConfigJson();
+  ;
 
   webServer.send(200, F("application/json"), json);
 }
 
 void handleConfigUpdate() {
-    printlnRaw(RequestParser::argsToString(webServer));
-    PersistenceManager::set(RequestParser::argsToConfiguration(webServer));
+  printlnRaw(RequestParser::argsToString(webServer));
+  PersistenceManager::set(RequestParser::argsToConfiguration(webServer));
 
-    // everything is fine
-    webServer.send(200);
+  // everything is fine
+  webServer.send(200);
 }
 
 } // namespace CaptivePortal
