@@ -6,10 +6,14 @@
 
 #include "SerialWrapper.h"
 #include "fileServer.h"
+#include "network/RequestParser.h"
 
 namespace CaptivePortal {
 
-void handleConfigPortal();
+void handleFile(String path);
+void handleNotFound();
+void handleConfigRequest();
+void handleConfigUpdate();
 
 namespace {
   const byte DNS_PORT = 53;
@@ -34,14 +38,12 @@ void setup() {
   // provided IP to all DNS request
   dnsServer.start(DNS_PORT, "*", apIP);
 
-  webServer.on(("/config"), handleConfigPortal);
+  webServer.on(("/config"), handleConfigRequest);
+  webServer.on(("/update"), handleConfigUpdate);
+
 
   // stream initial html page for basic requests
-  webServer.onNotFound([]() {
-    File f = FileServer::getFile("/index.html");
-    String contentType = FileServer::getContentType("/index.html");
-    webServer.streamFile(f, contentType);
-  });
+  webServer.onNotFound(handleNotFound);
   webServer.begin();
 }
 
@@ -50,8 +52,54 @@ void loop() {
   webServer.handleClient();
 }
 
-void handleConfigPortal() {
-  webServer.send(200, "text/html", responseHTML + "\nThis is the config");
+/**
+ * handle all undefined uris
+ * this includes the standard captive portal request
+ * */
+void handleNotFound() {
+  // look for a html file within the path of the server
+  String path = webServer.uri();
+
+  // check if it's the standard captive portal request
+  if (path.endsWith("/generate_204") || path.endsWith("/gen_204")) {
+    handleFile("/index.html");
+  } else {
+  // else handle all other files
+    if (path.endsWith("/"))
+        path += "index.html";
+    handleFile(path);
+  }
+}
+
+// send requested files
+void handleFile(String path) {
+  if (FileServer::fileExists(path)) {
+    File f = FileServer::getFile(path);
+    String contentType = FileServer::getContentType(path);
+    webServer.streamFile(f, contentType);
+    f.close();
+  } else {
+    print(F("File '"));
+    printRaw(path);
+    println(F("' does not exist"));
+
+    webServer.send(404, "text/html", "Requested file not found. Reupload the file system image.");
+  }
+}
+
+void handleConfigRequest() {
+  println(F("Received config request"));
+  String json = RequestParser::generateConfigJson();;
+
+  webServer.send(200, F("application/json"), json);
+}
+
+void handleConfigUpdate() {
+    printlnRaw(RequestParser::argsToString(webServer));
+    PersistenceManager::set(RequestParser::argsToConfiguration(webServer));
+
+    // everything is fine
+    webServer.send(200);
 }
 
 } // namespace CaptivePortal
