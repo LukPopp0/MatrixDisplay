@@ -77,10 +77,10 @@ const Config::Configuration argsToConfiguration(ESP8266WebServer& server) {
   else
     logError(F("Value 1 not found"));
 
-  if (server.argName(1) == "brightness")
-    newValues.brightness = server.arg(1) == "true" ? true : false;
+  if (server.argName(2) == "brightness")
+    newValues.brightness = server.arg(2) == "true" ? true : false;
   else
-    logError(F("Value 1 not found"));
+    logError(F("Value 2 not found"));
 
   // add new fields here
 

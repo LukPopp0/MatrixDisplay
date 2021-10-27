@@ -37,10 +37,15 @@ function sendDataUpdate() {
     dataUpdateTimeout = setTimeout(() => {
         // generate url string from the config object
         let urlString = generateUrlString();
-        // TODO: figure out why it is not sent
+
+        const replacedString = document.URL
+            .replace('index.html', '')
+            .replace('generate_204', '')
+            .replace('gen_204', '');
+
         let xhttp = new XMLHttpRequest();
-        xhttp.open("POST", d.URL + "update", true);
-        xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhttp.open('POST', replacedString + 'update', true);
+        xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         xhttp.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
                 // TODO: maybe make this a toast?
@@ -65,7 +70,6 @@ function generateUrlString() {
 
 function updateUIElements() {
     // FormData(document.getElementById('image-selection-form'))value = config.selectedImage;
-    console.log(document.getElementById('image-selection-form'));
     document.getElementById('fps-input').value = config.fps;
 
     document.getElementById('brightness-slider').value = Math.round(config.brightness / 2.55);
