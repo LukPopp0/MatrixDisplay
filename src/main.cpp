@@ -6,6 +6,7 @@
 #include "fileServer.h"
 #include "network/CaptivePortal.h"
 #include "persistence/persistenceManager.h"
+#include "ledController.h"
 
 void setup() {
   setupSerial(115200);
@@ -16,9 +17,13 @@ void setup() {
   PersistenceStore::setup();
 
   CaptivePortal::setup();
+  LedController::setup();
 }
 
 void loop() {
+  FastLED.delay(1);
   CaptivePortal::loop();
+  PersistenceManager::trySave();
+  LedController::loop();
   heartbeatSerial();
 }
