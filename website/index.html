@@ -13,28 +13,26 @@
 <body onload="init()">
   <h1>YOUR LED MATRIX</h1>
 
-  <form id="image-selection-form">
-    <div class="image-selection-container">
-      <input type="radio" id="image1" name="image-selection" value="1" onchange="onValueChange(this, 'selectedImage')"
-        checked />
-      <label for="image1"></label>
+  <div id="image-selection-container">
+    <input type="radio" id="image0" name="image-selection" value="0" onchange="onValueChange(this, 'selectedImage')"
+      checked />
+    <label for="image1"></label>
 
-      <input type="radio" id="image2" name="image-selection" value="2"
-        onchange="onValueChange(this, 'selectedImage')" />
-      <label for="image2"></label>
+    <input type="radio" id="image1" name="image-selection" value="1"
+      onchange="onValueChange(this, 'selectedImage')" />
+    <label for="image2"></label>
 
-      <input type="radio" id="image3" name="image-selection" value="3"
-        onchange="onValueChange(this, 'selectedImage')" />
-      <label for="image3"></label>
-    </div>
-  </form>
+    <input type="radio" id="image2" name="image-selection" value="2"
+      onchange="onValueChange(this, 'selectedImage')" />
+    <label for="image3"></label>
+  </div>
 
-  <div class="slider-container">
+  <div id="slider-container">
     <label for="fps-input">Frames per second</label>
     <input id="fps-input" type="number" min="1" max="24" value="4" onchange="onValueChange(this, 'fps')" />
   </div>
 
-  <div class="slider-container">
+  <div id="slider-container">
     <label for="brightness-slider">Brightness</label>
     <input id="brightness-slider" type="range" min="1" max="100" value="50"
       oninput='onValueChange(this, "brightness")' />

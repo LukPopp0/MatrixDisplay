@@ -1,7 +1,7 @@
 'use strict';
 
 let config = {
-    selectedImage: 1,
+    selectedImage: 0,
     fps: 4,
     brightness: 127,
 };
@@ -34,6 +34,7 @@ function loadConfiguration() {
 }
 
 function sendDataUpdate() {
+    // TODO: Change this so that it only gets called when pressed on a button
     // clear existing timeout and set new one to send only every 200 ms
     clearTimeout(dataUpdateTimeout);
     dataUpdateTimeout = setTimeout(() => {
@@ -72,7 +73,8 @@ function generateUrlString() {
 
 
 function updateUIElements() {
-    // FormData(document.getElementById('image-selection-form'))value = config.selectedImage;
+    document.getElementById('image-selection-container')
+        .children[`image${config.selectedImage}`].checked = true;
     document.getElementById('fps-input').value = config.fps;
 
     document.getElementById('brightness-slider').value = Math.round(config.brightness / 2.55);
