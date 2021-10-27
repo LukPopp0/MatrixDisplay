@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 let config = {
     selectedImage: 1,
@@ -15,7 +15,7 @@ function init() {
 
 function loadConfiguration() {
     let xhttp = new XMLHttpRequest();
-    xhttp.open("GET", document.URL + "config", true);
+    xhttp.open('GET', document.URL + 'config', true);
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             response = JSON.parse(xhttp.responseText);
@@ -24,7 +24,9 @@ function loadConfiguration() {
                 config.selectedImage = parseInt(response.selectedImage);
                 config.fps = parseInt(response.fps);
                 config.brightness = parseInt(response.brightness);
-            } catch {}
+            } catch {
+                showSnackbar('Failed to read data.')
+            }
 
             updateUIElements();
         }
@@ -35,6 +37,8 @@ function sendDataUpdate() {
     // clear existing timeout and set new one to send only every 200 ms
     clearTimeout(dataUpdateTimeout);
     dataUpdateTimeout = setTimeout(() => {
+        showSnackbar('Sending data update.');
+
         // generate url string from the config object
         let urlString = generateUrlString();
 
@@ -48,8 +52,7 @@ function sendDataUpdate() {
         xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         xhttp.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
-                // TODO: maybe make this a toast?
-                console.log("Successfully sent config update.");
+                showSnackbar('Successfully changed settings.');
             }
         }
         xhttp.send(urlString);
@@ -87,4 +90,16 @@ function onValueChange(element, targetProperty) {
 
     updateUIElements();
     sendDataUpdate();
+}
+
+let snackbarTimeout = null;
+function showSnackbar(text) {
+    let el = document.getElementById('snackbar');
+    el.innerHTML = text;
+    el.className = 'show';
+
+    clearTimeout(snackbarTimeout);
+    setTimeout(function() {
+        el.className = el.className.replace('show', '');
+    }, 3000)
 }
