@@ -11,10 +11,10 @@
 void setup() {
   setupSerial(115200);
 
+  PersistenceStore::setup();
   if (!FileServer::setup()) {
     println(F("An Error has occurred while mounting LittleFS."));
   }
-  PersistenceStore::setup();
 
   CaptivePortal::setup();
   LedController::setup();
