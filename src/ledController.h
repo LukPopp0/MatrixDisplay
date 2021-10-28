@@ -23,6 +23,7 @@ namespace {
 const uint8_t LED_PIN = D6; // = data pin 12
 const uint8_t MATRIX_WIDTH = 16;
 const uint16_t NUM_LEDS = 256;
+const uint8_t MAX_LED_BRIGHTNESS = 255 / 3;
 
 CRGB leds[NUM_LEDS];
 uint32_t tNextFrame = 0;
@@ -38,7 +39,9 @@ uint8_t currentImageNr = 0;
 void setup() {
   pinMode(LED_PIN, OUTPUT);
 
-  FastLED.addLeds<WS2812B, LED_PIN, RGB>(leds, NUM_LEDS);
+  FastLED.addLeds<WS2812B, LED_PIN, GRB>(leds, NUM_LEDS);
+  FastLED.setBrightness(255/3);
+  FastLED.setMaxPowerInVoltsAndMilliamps(5, 5000);
 
   PersistenceManager::registerListener(updateConfiguration);
   updateConfiguration();
