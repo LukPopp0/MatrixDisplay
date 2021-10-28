@@ -73,12 +73,14 @@ const Config::Configuration argsToConfiguration(ESP8266WebServer& server) {
     logError(F("Value 0 not found"));
 
   if (server.argName(1) == "fps")
-    newValues.fps = server.arg(1) == "true" ? true : false;
+    newValues.fps = server.arg(1).toInt();
   else
     logError(F("Value 1 not found"));
 
   if (server.argName(2) == "brightness")
-    newValues.brightness = server.arg(2) == "true" ? true : false;
+    // TODO: Change this "/ 3" to access the max
+    // brightness set in the led controller
+    newValues.brightness = server.arg(2).toInt() / 3;
   else
     logError(F("Value 2 not found"));
 
