@@ -14,17 +14,24 @@
   <h1>YOUR LED MATRIX</h1>
 
   <div id="image-selection-container">
-    <input type="radio" id="image0" name="image-selection" value="0" onchange="onValueChange(this, 'selectedImage')"
-      checked />
-    <label for="image1"></label>
-
-    <input type="radio" id="image1" name="image-selection" value="1"
-      onchange="onValueChange(this, 'selectedImage')" />
-    <label for="image2"></label>
-
-    <input type="radio" id="image2" name="image-selection" value="2"
-      onchange="onValueChange(this, 'selectedImage')" />
-    <label for="image3"></label>
+    <img onclick="onValueChange(this, 'selectedImage')" src="thumbnails/00_heart.png" width="64" height="64" value="0"/>
+    <span value="1"></span>
+    <!-- <img onclick="onValueChange(this, 'selectedImage')" src="thumbnails/01_fireplace.png" width="64" height="64" value="1"/> -->
+    <span value="2"></span>
+    <span value="3"></span>
+    <!-- <img onclick="onValueChange(this, 'selectedImage')" src="thumbnails/03_thor.png" width="64" height="64" value="3"/> -->
+    <span value="4"></span>
+    <span value="5"></span>
+    <img onclick="onValueChange(this, 'selectedImage')" src="thumbnails/06_sun.png" width="64" height="64" value="6"/>
+    <span value="7"></span>
+    <img onclick="onValueChange(this, 'selectedImage')" src="thumbnails/08_embers.png" width="64" height="64" value="8"/>
+    <span value="9"></span>
+    <img onclick="onValueChange(this, 'selectedImage')" src="thumbnails/10_bulba.png" width="64" height="64" value="10"/>
+    <img onclick="onValueChange(this, 'selectedImage')" src="thumbnails/11_charma.png" width="64" height="64" value="11"/>
+    <img onclick="onValueChange(this, 'selectedImage')" src="thumbnails/12_squirtle.png" width="64" height="64" value="12"/>
+    <img onclick="onValueChange(this, 'selectedImage')" src="thumbnails/13_turtwig.png" width="64" height="64" value="13"/>
+    <img onclick="onValueChange(this, 'selectedImage')" src="thumbnails/14_pikachu.png" width="64" height="64" value="14"/>
+    <span value="15"></span>
   </div>
 
   <div id="slider-container">
@@ -39,6 +46,7 @@
     <output id="brightness-info"></output>
   </div>
   <div id="snackbar"></div>
+  <button id="send-button" onclick="sendDataUpdate()">UPDATE</button>
 </body>
 
 </html>

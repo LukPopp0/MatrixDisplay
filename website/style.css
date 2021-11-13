@@ -2,12 +2,54 @@
 
 body {
     font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    color: white;
+    background-color: #181818;
+}
+
+body > * {
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    width: 80%;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+h1 {
+    text-align: center;
+}
+
+button {
+    background-color: white;
+    color: black;
+    border: 2px solid black;
+    border-radius: 2px;
+    padding: 0.5rem;
+}
+
+button:hover {
+    background-color: #ccc;
+}
+
+button:active {
+    background-color: #888;
+}
+
+#send-button {
+    width: 8rem;
+}
+
+#image-selection-container > img {
+    border: 3px solid black;
+}
+
+.selected-image {
+    border: 3px solid white !important;
 }
 
 #snackbar {
     visibility: hidden; /* Hidden by default. Visible on click */
     min-width: 250px; /* Set a default minimum width */
-    margin-left: -125px; /* Divide value of min-width by 2 */
     background-color: #333; /* Black background color */
     color: #fff; /* White text color */
     text-align: center; /* Centered text */
@@ -16,6 +58,7 @@ body {
     position: fixed; /* Sit on top of the screen */
     z-index: 1; /* Add a z-index if needed */
     left: 50%; /* Center the snackbar */
+    transform: translateX(-50%);
     bottom: 30px; /* 30px from the bottom */
 }
 

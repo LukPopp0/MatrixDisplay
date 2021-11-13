@@ -5,8 +5,16 @@
 
 #include "persistence/configuration.h"
 #include "persistence/persistenceManager.h"
-#include "image_data/image1.h"
-#include "image_data/image2.h"
+#include "image_data/00_heart.h"
+// #include "image_data/01_fireplace.h"
+// #include "image_data/03_thor.h"
+#include "image_data/06_sun.h"
+#include "image_data/08_embers.h"
+#include "image_data/10_bulba.h"
+#include "image_data/11_charma.h"
+#include "image_data/12_squirtle.h"
+#include "image_data/13_turtwig.h"
+#include "image_data/14_pikachu.h"
 #include "SerialWrapper.h"
 
 namespace LedController {
@@ -54,17 +62,45 @@ void loop() {
     switch (currentImageNr)
     {
       case 0:
-        showFrame(image1, currentFrame);
+        showFrame(heart, currentFrame);
         break;
-      case 1:
-        showFrame(image2, currentFrame);
-        break;
-      // case 2:
-      //   println(F("case 2"));
-      //   // showFrame(image3, currentFrame);
+      // case 1:
+      //   showFrame(fireplace, currentFrame);
       //   break;
+      // case 2:
+      //   showFrame(loki, currentFrame);
+      //   break;
+      // case 3:
+      //   showFrame(thor, currentFrame);
+      //   break;
+      // case 4:
+      //   showFrame(her, currentFrame);
+      //   break;
+      // case 5:
+      //   showFrame(us, currentFrame);
+      //   break;
+      case 6:
+        showFrame(sun, currentFrame);
+        break;
+      case 8:
+        showFrame(embers, currentFrame);
+        break;
+      case 10:
+        showFrame(bulba, currentFrame);
+        break;
+      case 11:
+        showFrame(charma, currentFrame);
+        break;
+      case 12:
+        showFrame(squirtle, currentFrame);
+        break;
+      case 13:
+        showFrame(turtwig, currentFrame);
+        break;
+      case 14:
+        showFrame(pikachu, currentFrame);
+        break;
       default:
-        println(F("clear"));
         FastLED.clear();
         break;
     }
@@ -87,15 +123,48 @@ void updateConfiguration() {
   currentImageNr = config.selectedImage;
   switch (currentImageNr)
   {
-  case 0:
-    numFrames = LEN(image1);
-    break;
-  case 1:
-    numFrames = LEN(image2);
-    break;
-  default:
-    numFrames = 1;
-    break;
+    case 0:
+      numFrames = LEN(heart);
+      break;
+    // case 1:
+    //   numFrames = LEN(fireplace);
+    //   break;
+    // case 2:
+    //   numFrames = LEN(loki);
+    //   break;
+    // case 3:
+    //   numFrames = LEN(thor);
+    //   break;
+    // case 4:
+    //   numFrames = LEN(her);
+    //   break;
+    // case 5:
+    //   numFrames = LEN(us);
+    //   break;
+    case 6:
+      numFrames = LEN(sun);
+      break;
+    case 8:
+      numFrames = LEN(embers);
+      break;
+    case 10:
+      numFrames = LEN(bulba);
+      break;
+    case 11:
+      numFrames = LEN(charma);
+      break;
+    case 12:
+      numFrames = LEN(squirtle);
+      break;
+    case 13:
+      numFrames = LEN(turtwig);
+      break;
+    case 14:
+      numFrames = LEN(pikachu);
+      break;
+    default:
+      numFrames = 1;
+      break;
   }
 
   // calculate fps

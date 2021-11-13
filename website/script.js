@@ -2,28 +2,32 @@
 
 let config = {
     selectedImage: 0,
-    fps: 4,
+    fps: 12,
     brightness: 127,
 };
 
 let dataUpdateTimeout = null;
 
 function init() {
-    updateUIElements();
     loadConfiguration();
+    updateUIElements();
 }
 
 function loadConfiguration() {
+    const baseURL = getBaseURL();
+
     let xhttp = new XMLHttpRequest();
-    xhttp.open('GET', document.URL + 'config', true);
+    xhttp.open('GET', baseURL + 'config', true);
+    showSnackbar(`Requesting configuration`);
     xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            response = JSON.parse(xhttp.responseText);
+        if (this.readyState === 4 && this.status === 200) {
+            const response = JSON.parse(xhttp.responseText);
 
             try {
                 config.selectedImage = parseInt(response.selectedImage);
                 config.fps = parseInt(response.fps);
                 config.brightness = parseInt(response.brightness);
+                showSnackbar('Successfully read configuration.')
             } catch {
                 showSnackbar('Failed to read data.')
             }
@@ -31,10 +35,10 @@ function loadConfiguration() {
             updateUIElements();
         }
     }
+    xhttp.send();
 }
 
 function sendDataUpdate() {
-    // TODO: Change this so that it only gets called when pressed on a button
     // clear existing timeout and set new one to send only every 200 ms
     clearTimeout(dataUpdateTimeout);
     dataUpdateTimeout = setTimeout(() => {
@@ -43,13 +47,10 @@ function sendDataUpdate() {
         // generate url string from the config object
         let urlString = generateUrlString();
 
-        const replacedString = document.URL
-            .replace('index.html', '')
-            .replace('generate_204', '')
-            .replace('gen_204', '');
+        const baseURL = getBaseURL();
 
         let xhttp = new XMLHttpRequest();
-        xhttp.open('POST', replacedString + 'update', true);
+        xhttp.open('POST', baseURL + 'update', true);
         xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         xhttp.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
@@ -73,8 +74,14 @@ function generateUrlString() {
 
 
 function updateUIElements() {
-    document.getElementById('image-selection-container')
-        .children[`image${config.selectedImage}`].checked = true;
+    let tmp = document.getElementsByClassName('selected-image');
+    if(tmp.length > 0) {
+        tmp[0].classList.remove('selected-image');
+    }
+    let imageSelectionContainer = document.getElementById('image-selection-container');
+    console.log(config.selectedImage, imageSelectionContainer)
+    imageSelectionContainer.children[config.selectedImage].classList.add('selected-image');
+
     document.getElementById('fps-input').value = config.fps;
 
     document.getElementById('brightness-slider').value = Math.round(config.brightness / 2.55);
@@ -83,15 +90,13 @@ function updateUIElements() {
 
 function onValueChange(element, targetProperty) {
     switch(targetProperty) {
-        case 'selectedImage': config[targetProperty] = parseInt(element.value); break;
+        case 'selectedImage': config[targetProperty] = parseInt(element.getAttribute('value')); break;
         case 'fps': config[targetProperty] = element.value; break;
         case 'brightness': config[targetProperty] = Math.round(element.value * 2.55); break;
         default: break;
-
     }
 
     updateUIElements();
-    sendDataUpdate();
 }
 
 let snackbarTimeout = null;
@@ -103,5 +108,12 @@ function showSnackbar(text) {
     clearTimeout(snackbarTimeout);
     setTimeout(function() {
         el.className = el.className.replace('show', '');
-    }, 3000)
+    }, 5000)
+}
+
+function getBaseURL() {
+    return document.URL
+        .replace('index.html', '')
+        .replace('generate_204', '')
+        .replace('gen_204', '');
 }
