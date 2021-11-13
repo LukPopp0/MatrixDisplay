@@ -21,6 +21,6 @@ struct Configuration {
   }
 };
 
-Configuration defaultConfiguration = {0, 4, 127};
+const Configuration defaultConfiguration = {0, 12, 84};
 
 } // namespace Config

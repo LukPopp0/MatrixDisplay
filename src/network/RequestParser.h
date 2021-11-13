@@ -48,7 +48,8 @@ const String generateConfigJson() {
   // add element for every config parameter
   doc["selectedImage"] = config.selectedImage;
   doc["fps"] = config.fps;
-  doc["brightness"] = config.brightness;
+  // TODO: Hack * 3 to display a higher brightness than it actually is
+  doc["brightness"] = config.brightness * 3;
 
   // add new fields here and increase JSON size
 

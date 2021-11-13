@@ -18,16 +18,10 @@ void handleConfigUpdate();
 
 namespace {
 const byte DNS_PORT = 53;
-IPAddress apIP(172, 217, 28, 1);
+const IPAddress apIP(172, 217, 28, 1);
 DNSServer dnsServer;
 ESP8266WebServer webServer(80);
 const char* captivePortalName = "My LED Matrix";
-String responseHTML = ""
-                      "<!DOCTYPE html><html lang='en'><head>"
-                      "<meta name='viewport' content='width=device-width'>"
-                      "<title>CaptivePortal</title></head><body>"
-                      "<h1>Hello World!</h1><p>This is a captive portal example."
-                      " All requests will be redirected here.</p></body></html>";
 } // namespace
 
 void setup() {
@@ -60,6 +54,7 @@ void handleNotFound() {
   // look for a html file within the path of the server
   String path = webServer.uri();
 
+  printlnRaw(path);
   // check if it's the standard captive portal request (probe request)
   if (path.endsWith("/generate_204") || path.endsWith("/gen_204")) {
     handleFile("/index.html");
@@ -90,7 +85,6 @@ void handleFile(String path) {
 void handleConfigRequest() {
   println(F("Received config request"));
   String json = RequestParser::generateConfigJson();
-  ;
 
   webServer.send(200, F("application/json"), json);
 }

@@ -104,7 +104,7 @@ void updateConfiguration() {
 
 // show a specifc frame from an image
 void showFrame(auto image, uint8_t frame) {
- leds[0] = CHSV(0, 50, 50);
+ leds[0] = CRGB(0, 0, 0);
 
   for(uint8_t i = 0; i < MATRIX_WIDTH; ++i) {
 
@@ -119,8 +119,9 @@ void showFrame(auto image, uint8_t frame) {
 
 // sets the color of one LED
 void setLedInMatrix(uint8_t row, uint8_t col, const uint8_t clr[3]) {
+  row = MATRIX_WIDTH - row - 1;
   bool rowUneven = row % 2;
-  if(!rowUneven) col = MATRIX_WIDTH - 1 - col;
+  if(rowUneven) col = MATRIX_WIDTH - 1 - col;
 
   uint8_t idx = row * MATRIX_WIDTH + col;
   // adding one here to skip the first led that is inside the box
