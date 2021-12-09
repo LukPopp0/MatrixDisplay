@@ -2,7 +2,8 @@
 
 #include "LittleFS.h"
 #include <Arduino.h>
-
+#include <string>
+#include <sstream>
 
 #include "SerialWrapper.h"
 
@@ -11,6 +12,7 @@ bool setup();
 const String getContentType(String filename);
 const bool fileExists(String path);
 const File getFile(String path);
+const std::vector<uint8_t> readFileToInts(String path);
 
 bool setup() { return LittleFS.begin(); }
 
@@ -43,6 +45,44 @@ const File getFile(String path) {
   print(F("Getting file from path: "));
   printlnRaw(path);
   return LittleFS.open(path, "r");
+}
+
+std::vector<std::string> split(const std::string& s, char delimiter)
+{
+   std::vector<std::string> tokens;
+   std::string token;
+   std::istringstream tokenStream(s);
+   while (std::getline(tokenStream, token, delimiter))
+   {
+      tokens.push_back(token);
+   }
+   return tokens;
+}
+
+const std::vector<uint8_t> readFileToInts(String path) {
+  File f = getFile(path);
+
+  if (!f) {
+    println(F("Failed to open file for reading"));
+    return std::vector<uint8_t>({0});
+  }
+
+  print(F("Starting to read..."));
+  std::vector<uint8_t> v;
+  while (f.available()) {
+    String line = f.readStringUntil('\n');
+    const char* cline = line.c_str();
+    const std::string s(cline);
+
+    std::vector<std::string> sNumbers = split(s, ' ');
+
+    for(std::string& str: sNumbers) {
+      v.push_back(std::stoi(str));
+    }
+  }
+  f.close();
+  println(F("done."));
+  return v;
 }
 
 } // namespace FileServer
