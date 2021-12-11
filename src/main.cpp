@@ -4,9 +4,10 @@
 
 #include "SerialWrapper.h"
 #include "fileServer.h"
+#include "ledController.h"
 #include "network/CaptivePortal.h"
 #include "persistence/persistenceManager.h"
-#include "ledController.h"
+
 
 void setup() {
   setupSerial(115200);
@@ -18,6 +19,7 @@ void setup() {
 
   CaptivePortal::setup();
   LedController::setup();
+  print(F("Finished setup."));
 }
 
 void loop() {
