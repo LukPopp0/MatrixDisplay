@@ -94,15 +94,6 @@ void updateConfiguration() {
   numFrames = FileServer::readAnimFileToInts(nrToImage[currentImageNr], currentImage);
   currentFrame = 0;
 
-  for (uint8_t i = 0; i < MATRIX_WIDTH; ++i) {
-    println(F(" "));
-    for (uint8_t j = 0; j < MATRIX_WIDTH; ++j) {
-      printRaw(currentImage[currentFrame][i][j][0]);
-      print(F(" "));
-    }
-  }
-  println(F("Read file to integers."));
-
   // calculate fps
   millisToNextFrame = 1000 / config.fps;
 }
