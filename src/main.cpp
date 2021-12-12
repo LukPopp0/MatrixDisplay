@@ -11,6 +11,7 @@
 
 void setup() {
   setupSerial(115200);
+  println(F("Starting setup."));
 
   PersistenceStore::setup();
   if (!FileServer::setup()) {
@@ -19,7 +20,7 @@ void setup() {
 
   CaptivePortal::setup();
   LedController::setup();
-  print(F("Finished setup."));
+  println(F("Finished setup."));
 }
 
 void loop() {

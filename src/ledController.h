@@ -2,8 +2,6 @@
 
 #define FASTLED_INTERNAL
 #include <FastLED.h>
-#include <array>
-#include <vector>
 
 #include "SerialWrapper.h"
 #include "persistence/configuration.h"
@@ -16,8 +14,7 @@ void setup();
 void loop();
 void updateConfiguration();
 void showFrame(uint8_t frame);
-void setLedInMatrix(uint8_t row, uint8_t col, array<uint8_t, 3>& clr);
-void animDataToImage(vector<uint8_t> animData);
+void setLedInMatrix(uint8_t row, uint8_t col, uint8_t clr[3]);
 
 namespace {
 
@@ -27,7 +24,7 @@ const uint8_t MATRIX_WIDTH = 16;
 const uint16_t NUM_LEDS = 256;
 const uint8_t MAX_LED_BRIGHTNESS = 255 / 3;
 
-array<array<array<array<uint8_t, 3>, 16>, 16>, 16> currentImage;
+uint8_t currentImage[16][16][16][3];
 CRGB leds[NUM_LEDS];
 uint32_t tNextFrame = 0;
 uint16_t millisToNextFrame = 200;
@@ -94,9 +91,17 @@ void updateConfiguration() {
                               "/image_data/sun2.anim"};
 
   // set current image and number of frames
-  vector<uint8_t> s = FileServer::readFileToInts(nrToImage[currentImageNr]);
-  print(F("Read file to integers"));
-  animDataToImage(s);
+  numFrames = FileServer::readAnimFileToInts(nrToImage[currentImageNr], currentImage);
+  currentFrame = 0;
+
+  for (uint8_t i = 0; i < MATRIX_WIDTH; ++i) {
+    println(F(" "));
+    for (uint8_t j = 0; j < MATRIX_WIDTH; ++j) {
+      printRaw(currentImage[currentFrame][i][j][0]);
+      print(F(" "));
+    }
+  }
+  println(F("Read file to integers."));
 
   // calculate fps
   millisToNextFrame = 1000 / config.fps;
@@ -116,7 +121,7 @@ void showFrame(uint8_t frame) {
 }
 
 // sets the color of one LED
-void setLedInMatrix(uint8_t row, uint8_t col, array<uint8_t, 3>& clr) {
+void setLedInMatrix(uint8_t row, uint8_t col, uint8_t clr[3]) {
   row = MATRIX_WIDTH - row - 1;
   bool rowUneven = row % 2;
   if (rowUneven)
@@ -125,24 +130,6 @@ void setLedInMatrix(uint8_t row, uint8_t col, array<uint8_t, 3>& clr) {
   uint8_t idx = row * MATRIX_WIDTH + col;
   // adding one here to skip the first led that is inside the box
   leds[1 + idx] = CRGB(clr[0], clr[1], clr[2]);
-}
-
-void animDataToImage(vector<uint8_t> animData) {
-  numFrames = animData[0];
-  const uint32_t numPixels = MATRIX_WIDTH * MATRIX_WIDTH;
-  print(F("Size of animData: "));
-  printlnRaw(animData.size());
-
-  for (uint8_t i = 0; i < numFrames; ++i) {
-    for (uint8_t x = 0; x < MATRIX_WIDTH; ++x) {
-      for (uint8_t y = 0; y < MATRIX_WIDTH; ++y) {
-        uint32_t idx = 3 + 3 * (i * numPixels + x * MATRIX_WIDTH + y);
-        currentImage[i][x][y][0] = animData[idx + 0];
-        currentImage[i][x][y][1] = animData[idx + 1];
-        currentImage[i][x][y][2] = animData[idx + 2];
-      }
-    }
-  }
 }
 
 } // namespace LedController

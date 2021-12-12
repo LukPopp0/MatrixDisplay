@@ -90,6 +90,7 @@ void handleConfigRequest() {
 }
 
 void handleConfigUpdate() {
+  println(F("Received config update."));
   printlnRaw(RequestParser::argsToString(webServer));
   PersistenceManager::set(RequestParser::argsToConfiguration(webServer));
 

@@ -2,7 +2,6 @@
 
 #include "LittleFS.h"
 #include <Arduino.h>
-#include <string>
 #include <sstream>
 
 #include "SerialWrapper.h"
@@ -12,7 +11,7 @@ bool setup();
 const String getContentType(String filename);
 const bool fileExists(String path);
 const File getFile(String path);
-const std::vector<uint8_t> readFileToInts(String path);
+uint8_t readAnimFileToInts(String path, uint8_t outputData[16][16][16][3]);
 
 bool setup() { return LittleFS.begin(); }
 
@@ -47,42 +46,50 @@ const File getFile(String path) {
   return LittleFS.open(path, "r");
 }
 
-std::vector<std::string> split(const std::string& s, char delimiter)
-{
-   std::vector<std::string> tokens;
-   std::string token;
-   std::istringstream tokenStream(s);
-   while (std::getline(tokenStream, token, delimiter))
-   {
-      tokens.push_back(token);
-   }
-   return tokens;
-}
-
-const std::vector<uint8_t> readFileToInts(String path) {
+uint8_t readAnimFileToInts(String path, uint8_t outputData[16][16][16][3]) {
   File f = getFile(path);
+  const uint8_t maxSize = 16 * 16 * 3 * 16;
+  uint8_t numFrames = 0;
 
   if (!f) {
     println(F("Failed to open file for reading"));
-    return std::vector<uint8_t>({0});
   }
 
-  print(F("Starting to read..."));
-  std::vector<uint8_t> v;
+  if (f.available()) {
+    String line = f.readStringUntil('\n');
+    numFrames = line.toInt();
+    // Reading the second line, currently unused
+    f.readStringUntil('\n');
+  }
+
+  print(F("Starting to read"));
+  uint16_t counter = 0;
   while (f.available()) {
     String line = f.readStringUntil('\n');
     const char* cline = line.c_str();
-    const std::string s(cline);
 
-    std::vector<std::string> sNumbers = split(s, ' ');
+    // calculate position in array
+    uint8_t xy = counter % (16 * 16);
+    uint8_t frame = (counter - xy) / (16 * 16);
+    uint8_t y = xy % 16;
+    uint8_t x = (xy - y) / 16;
 
-    for(std::string& str: sNumbers) {
-      v.push_back(std::stoi(str));
+    char* pch = strtok((char*)cline, " ");
+    outputData[frame][x][y][0] = (uint8_t)std::stoi(pch);
+    pch = strtok(NULL, " ");
+    outputData[frame][x][y][1] = (uint8_t)std::stoi(pch);
+    pch = strtok(NULL, " ");
+    outputData[frame][x][y][2] = (uint8_t)std::stoi(pch);
+
+    counter++;
+
+    if (counter % 16 == 0) {
+      print(F("."));
     }
   }
   f.close();
   println(F("done."));
-  return v;
+  return numFrames;
 }
 
 } // namespace FileServer
