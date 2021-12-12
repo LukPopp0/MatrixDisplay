@@ -22,7 +22,7 @@ gzip -rf ./data*
 
 echo "[MPC] copying /image_data to /data/image_data"
 
-cp -rf ./src/image_data/pokemon/* ./data/image_data/
+cp -rf ./src/image_data/* ./data/image_data/
 
 pio run --target uploadfs || exit 4
 

@@ -27,7 +27,7 @@ const uint8_t MATRIX_WIDTH = 16;
 const uint16_t NUM_LEDS = 256;
 const uint8_t MAX_LED_BRIGHTNESS = 255 / 3;
 
-array<array<array<array<uint8_t, 3>, 16>, 16>, 12> currentImage;
+array<array<array<array<uint8_t, 3>, 16>, 16>, 16> currentImage;
 CRGB leds[NUM_LEDS];
 uint32_t tNextFrame = 0;
 uint16_t millisToNextFrame = 200;
@@ -71,18 +71,31 @@ void updateConfiguration() {
   currentFrame = 0;
   currentImageNr = config.selectedImage;
 
-  const String nrToImage[] = {
-      "/image_data/01-01-bulba.anim",    "/image_data/01-02-charmander.anim",
-      "/image_data/01-03-squirtle.anim", "/image_data/01-xx-eevee.anim",
-      "/image_data/01-xx-pikachu.anim",  "/image_data/03-01-treecko.anim",
-      "/image_data/03-02-torchic.anim",  "/image_data/03-03-mudkip.anim",
-      "/image_data/04-01-turtwig.anim",  "/image_data/04-02-chimchar.anim",
-      "/image_data/04-03-piplup.anim",   "/image_data/06-03-froakie.anim",
-      "/image_data/07-01-rowlet.anim",   "/image_data/07-02-litten.anim",
-  };
+  const String nrToImage[] = {"/image_data/01-01-bulba.anim",
+                              "/image_data/01-02-charmander.anim",
+                              "/image_data/01-03-squirtle.anim",
+                              "/image_data/01-xx-eevee.anim",
+                              "/image_data/01-xx-pikachu.anim",
+                              "/image_data/03-01-treecko.anim",
+                              "/image_data/03-02-torchic.anim",
+                              "/image_data/03-03-mudkip.anim",
+                              "/image_data/04-01-turtwig.anim",
+                              "/image_data/04-02-chimchar.anim",
+                              "/image_data/04-03-piplup.anim",
+                              "/image_data/06-03-froakie.anim",
+                              "/image_data/07-01-rowlet.anim",
+                              "/image_data/07-02-litten.anim",
+                              "/image_data/pikachu.anim",
+                              "/image_data/heart.anim",
+                              "/image_data/embers.anim",
+                              "/image_data/fireplace.anim",
+                              "/image_data/flame2_2.anim",
+                              "/image_data/shooting-stars.anim",
+                              "/image_data/sun2.anim"};
 
   // set current image and number of frames
   vector<uint8_t> s = FileServer::readFileToInts(nrToImage[currentImageNr]);
+  print(F("Read file to integers"));
   animDataToImage(s);
 
   // calculate fps
